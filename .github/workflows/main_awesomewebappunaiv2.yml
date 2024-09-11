@@ -14,30 +14,28 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      # - name: Setup MSBuild path
-      #  uses: microsoft/setup-msbuild@v1.0.2
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
         with:
-          sdk-version: '4.5.1'
+          dotnet-version: '4.5.1'
 
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v1.0.5
+      - name: Restore dependencies
+        run: dotnet restore
 
-      - name: Restore NuGet packages
-        run: nuget restore
+      - name: Build the project
+        run: dotnet build --configuration Release
 
-      - name: Publish to folder
-        run: msbuild /nologo /verbosity:m /t:Build /t:pipelinePreDeployCopyAllFilesToOneFolder /p:_PackageTempDir="\published\"
+      - name: Publish the project
+        run: dotnet publish --configuration Release --output ./output
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: ASP-app
-          path: '/published/**'
+          path: './output/**'
 
   deploy:
     runs-on: windows-latest
