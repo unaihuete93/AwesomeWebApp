@@ -16,8 +16,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup MSBuild path
-        uses: microsoft/setup-msbuild@v1.0.2
+      # - name: Setup MSBuild path
+      #  uses: microsoft/setup-msbuild@v1.0.2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          sdk-version: '4.5.1'
 
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.0.5
